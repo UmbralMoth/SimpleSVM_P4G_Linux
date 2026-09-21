@@ -23,15 +23,15 @@ jobs:
     - name: Build SimpleSvm.sys
       working-directory: ${{ github.workspace }}
       run: |
-        msbuild SimpleSVM_P4G_Linux/SimpleSvm.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
+        msbuild SimpleSvm.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
 
     - name: Verify Driver
       working-directory: ${{ github.workspace }}
       run: |
-        if (Test-Path "SimpleSVM_P4G_Linux/x64/Release/SimpleSvm.sys") {
-          Write-Host "Build successful: SimpleSVM_P4G_Linux/x64/Release/SimpleSvm.sys"
+        if (Test-Path "x64/Release/SimpleSvm.sys") {
+          Write-Host "Build successful: x64/Release/SimpleSvm.sys"
           # Copy to driver_amd for deployment
-          Copy-Item "SimpleSVM_P4G_Linux/x64/Release/SimpleSvm.sys" "SimpleSVM_P4G_Linux/driver_amd/SimpleSvm.sys" -Force
+          Copy-Item "x64/Release/SimpleSvm.sys" "driver_amd/SimpleSvm.sys" -Force
         } else {
           Write-Error "Build failed: SimpleSvm.sys not found"
           exit 1
@@ -42,12 +42,12 @@ jobs:
       with:
         name: SimpleSvm-P4G-Driver
         path: |
-          SimpleSVM_P4G_Linux/x64/Release/SimpleSvm.sys
-          SimpleSVM_P4G_Linux/driver_amd/SimpleSvm.sys
-          SimpleSVM_P4G_Linux/reflex.ini
-          SimpleSVM_P4G_Linux/reflex.dll
-          SimpleSVM_P4G_Linux/reflex_amd
-          SimpleSVM_P4G_Linux/reflex_intel
+          x64/Release/SimpleSvm.sys
+          driver_amd/SimpleSvm.sys
+          reflex.ini
+          reflex.dll
+          reflex_amd
+          reflex_intel
         retention-days: 30
 
     - name: Create Release (on tag)
@@ -55,11 +55,11 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          SimpleSVM_P4G_Linux/x64/Release/SimpleSvm.sys
-          SimpleSVM_P4G_Linux/driver_amd/SimpleSvm.sys
-          SimpleSVM_P4G_Linux/reflex.ini
-          SimpleSVM_P4G_Linux/reflex.dll
-          SimpleSVM_P4G_Linux/reflex_amd
-          SimpleSVM_P4G_Linux/reflex_intel
+          x64/Release/SimpleSvm.sys
+          driver_amd/SimpleSvm.sys
+          reflex.ini
+          reflex.dll
+          reflex_amd
+          reflex_intel
         draft: false
         prerelease: false
