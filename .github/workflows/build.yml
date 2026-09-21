@@ -31,7 +31,7 @@ jobs:
     - name: Build SimpleSvm.sys
       working-directory: ${{ github.workspace }}
       run: |
-        msbuild SimpleSvm.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal /p:SignMode=TestSign /p:DisableProductionSignCheck=true
+        msbuild SimpleSvm.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
 
     - name: Verify Driver
       working-directory: ${{ github.workspace }}
