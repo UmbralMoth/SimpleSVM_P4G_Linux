@@ -45,10 +45,6 @@
       <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release|x64'">None</DebugInformationFormat>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
     </ClCompile>
-    <DriverSign>
-      <FileDigestAlgorithm>SHA1</FileDigestAlgorithm>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/s PrivateCertStore /tr http://timestamp.digicert.com /td SHA256 %(AdditionalOptions)</AdditionalOptions>
-    </DriverSign>
     <Link>
       <GenerateDebugInformation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</GenerateDebugInformation>
       <EntryPointSymbol Condition="'$(Configuration)|$(Platform)'=='Release|x64'">DriverEntry</EntryPointSymbol>
