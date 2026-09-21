@@ -19,17 +19,17 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Build SimpleSvm.sys
-      working-directory: ${{ github.workspace }}/SimpleSVM_P4G_Linux
+      working-directory: ${{ github.workspace }}
       run: |
-        msbuild SimpleSvm.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
+        msbuild SimpleSVM_P4G_Linux/SimpleSvm.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
 
     - name: Verify Driver
-      working-directory: ${{ github.workspace }}/SimpleSVM_P4G_Linux
+      working-directory: ${{ github.workspace }}
       run: |
-        if (Test-Path "x64/Release/SimpleSvm.sys") {
-          Write-Host "Build successful: x64/Release/SimpleSvm.sys"
+        if (Test-Path "SimpleSVM_P4G_Linux/x64/Release/SimpleSvm.sys") {
+          Write-Host "Build successful: SimpleSVM_P4G_Linux/x64/Release/SimpleSvm.sys"
           # Copy to driver_amd for deployment
-          Copy-Item "x64/Release/SimpleSvm.sys" "driver_amd/SimpleSvm.sys" -Force
+          Copy-Item "SimpleSVM_P4G_Linux/x64/Release/SimpleSvm.sys" "SimpleSVM_P4G_Linux/driver_amd/SimpleSvm.sys" -Force
         } else {
           Write-Error "Build failed: SimpleSvm.sys not found"
           exit 1
