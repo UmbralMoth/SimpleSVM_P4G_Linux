@@ -20,8 +20,8 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Install Windows Driver Kit (WDK) via winget
-      run: winget install Microsoft.WDK --accept-source-agreements --silent
+    - name: Install Windows Driver Kit (WDK) via Chocolatey
+      run: choco install wdk --version=10.0.22621.2428 -y
 
     - name: Build SimpleSvm.sys
       working-directory: ${{ github.workspace }}
