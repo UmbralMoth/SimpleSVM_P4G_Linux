@@ -31,7 +31,7 @@ jobs:
     - name: Build SimpleSvm.sys
       working-directory: ${{ github.workspace }}
       run: |
-        msbuild SimpleSvm.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal /p:EnableSigning=false /p:DriverSign=false /p:SignMode=TestSign /p:DisableProductionSignCheck=true /p:SignAssembly=false
+        msbuild SimpleSvm.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal /p:EnableSigning=false /p:DriverSign=false /p:SignMode=TestSign /p:DisableProductionSignCheck=true /p:SignAssembly=false /p:DriverSign=false /p:FileDigestAlgorithm=SHA256
 
     - name: Verify Driver
       working-directory: ${{ github.workspace }}
