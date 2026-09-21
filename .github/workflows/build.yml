@@ -1,0 +1,70 @@
+name: Build SimpleSvm P4G Driver
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        path: SimpleSvm_P4G_Linux
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup VCPKG (optional, for dependencies)
+      run: |
+        git clone https://github.com/microsoft/vcpkg
+        ./vcpkg/bootstrap-vcpkg.bat
+
+    - name: Build SimpleSvm.sys
+      working-directory: SimpleSvm_P4G_Linux
+      run: |
+        msbuild SimpleSvm.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
+
+    - name: Verify Driver
+      working-directory: SimpleSvm_P4G_Linux
+      run: |
+        if (Test-Path "x64/Release/SimpleSvm.sys") {
+          Write-Host "Build successful: x64/Release/SimpleSvm.sys"
+          # Copy to driver_amd for deployment
+          Copy-Item "x64/Release/SimpleSvm.sys" "driver_amd/SimpleSvm.sys" -Force
+        } else {
+          Write-Error "Build failed: SimpleSvm.sys not found"
+          exit 1
+        }
+
+    - name: Upload Driver Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: SimpleSvm-P4G-Driver
+        path: |
+          SimpleSvm_P4G_Linux/x64/Release/SimpleSvm.sys
+          SimpleSvm_P4G_Linux/driver_amd/SimpleSvm.sys
+          SimpleSvm_P4G_Linux/reflex.ini
+          SimpleSvm_P4G_Linux/reflex.dll
+          SimpleSvm_P4G_Linux/reflex_amd
+          SimpleSvm_P4G_Linux/reflex_intel
+        retention-days: 30
+
+    - name: Create Release (on tag)
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          SimpleSvm_P4G_Linux/x64/Release/SimpleSvm.sys
+          SimpleSvm_P4G_Linux/driver_amd/SimpleSvm.sys
+          SimpleSvm_P4G_Linux/reflex.ini
+          SimpleSvm_P4G_Linux/reflex.dll
+          SimpleSvm_P4G_Linux/reflex_amd
+          SimpleSvm_P4G_Linux/reflex_intel
+        draft: false
+        prerelease: false
