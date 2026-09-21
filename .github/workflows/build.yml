@@ -14,24 +14,15 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
-      with:
-        path: SimpleSvm_P4G_Linux
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Setup VCPKG (optional, for dependencies)
-      run: |
-        git clone https://github.com/microsoft/vcpkg
-        ./vcpkg/bootstrap-vcpkg.bat
-
     - name: Build SimpleSvm.sys
-      working-directory: SimpleSvm_P4G_Linux
       run: |
         msbuild SimpleSvm.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
 
     - name: Verify Driver
-      working-directory: SimpleSvm_P4G_Linux
       run: |
         if (Test-Path "x64/Release/SimpleSvm.sys") {
           Write-Host "Build successful: x64/Release/SimpleSvm.sys"
@@ -47,12 +38,12 @@ jobs:
       with:
         name: SimpleSvm-P4G-Driver
         path: |
-          SimpleSvm_P4G_Linux/x64/Release/SimpleSvm.sys
-          SimpleSvm_P4G_Linux/driver_amd/SimpleSvm.sys
-          SimpleSvm_P4G_Linux/reflex.ini
-          SimpleSvm_P4G_Linux/reflex.dll
-          SimpleSvm_P4G_Linux/reflex_amd
-          SimpleSvm_P4G_Linux/reflex_intel
+          x64/Release/SimpleSvm.sys
+          driver_amd/SimpleSvm.sys
+          reflex.ini
+          reflex.dll
+          reflex_amd
+          reflex_intel
         retention-days: 30
 
     - name: Create Release (on tag)
@@ -60,11 +51,11 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          SimpleSvm_P4G_Linux/x64/Release/SimpleSvm.sys
-          SimpleSvm_P4G_Linux/driver_amd/SimpleSvm.sys
-          SimpleSvm_P4G_Linux/reflex.ini
-          SimpleSvm_P4G_Linux/reflex.dll
-          SimpleSvm_P4G_Linux/reflex_amd
-          SimpleSvm_P4G_Linux/reflex_intel
+          x64/Release/SimpleSvm.sys
+          driver_amd/SimpleSvm.sys
+          reflex.ini
+          reflex.dll
+          reflex_amd
+          reflex_intel
         draft: false
         prerelease: false
