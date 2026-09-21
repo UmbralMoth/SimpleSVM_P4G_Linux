@@ -20,19 +20,13 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Install Windows Driver Kit (WDK)
-      run: |
-        # Download and install WDK standalone
-        $WdkUrl = "https://go.microsoft.com/fwlink/?linkid=2128854"
-        $WdkInstaller = "$env:TEMP\wdksetup.exe"
-        Invoke-WebRequest -Uri $WdkUrl -OutFile $WdkInstaller
-        & $WdkInstaller /quiet /norestart
-        Write-Host "WDK installation completed"
+    - name: Install Windows Driver Kit (WDK) via winget
+      run: winget install Microsoft.WDK --accept-source-agreements --silent
 
     - name: Build SimpleSvm.sys
       working-directory: ${{ github.workspace }}
       run: |
-        msbuild SimpleSvm.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal
+        msbuild SimpleSvm.sln /p:Configuration=Release /p:Platform=x64 /verbosity:minimal /p:SignMode=TestSign /p:DisableProductionSignCheck=true
 
     - name: Verify Driver
       working-directory: ${{ github.workspace }}
