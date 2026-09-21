@@ -9,8 +9,8 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
-    timeout-minutes: 30
+    runs-on: windows-2022
+    timeout-minutes: 45
     
     steps:
     - uses: actions/checkout@v4
@@ -20,8 +20,13 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Install Windows Driver Kit (WDK) via Chocolatey
-      run: choco install wdk --version=10.0.22621.2428 -y
+    - name: Install Windows Driver Kit (WDK)
+      run: |
+        # Install WDK via VS Installer (more reliable)
+        "& 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe' modify \
+          --installPath 'C:\Program Files\Microsoft Visual Studio\17\Enterprise' \
+          --add Microsoft.VisualStudio.Component.WindowsDriverKit \
+          --quiet --wait --norestart"
 
     - name: Build SimpleSvm.sys
       working-directory: ${{ github.workspace }}
